@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre Nós — VibeEvent</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+        DESIGN TOKENS / CSS VARIABLES
+    ============================================= */
+    :root {
+      --clr-primary:      #7C3AED;
+      --clr-accent:       #F59E0B;
+      --clr-accent-lt:    #FEF3C7;
+      --clr-dark:         #0F0A1E;
+      --clr-mid:          #3B2F6B;
+      --clr-body:         #4B4565;
+      --clr-muted:        #8B85A7;
+      --clr-surface:      #FFFFFF;
+      --clr-bg:           #F7F4FF;
+      --clr-border:       #EDE9FE;
+      --ff-display:       'Syne', sans-serif;
+      --ff-body:          'Figtree', sans-serif;
+      --radius-card:      16px;
+      --radius-pill:      999px;
+      --shadow-card:      0 4px 24px rgba(124,58,237,.10);
+      --shadow-hover:     0 16px 48px rgba(124,58,237,.22);
+      --transition:       .28s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* =============================================
+        RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--clr-bg);
+      color: var(--clr-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--ff-display); color: var(--clr-dark); }
+    a { color: var(--clr-primary); text-decoration: none; transition: var(--transition); }
+    a:hover { color: var(--clr-primary-dark); }
+
+    /* =============================================
+        NAVBAR
+    ============================================= */
+    .vb-navbar {
+      background: rgba(15, 10, 30, .96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: .9rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .vb-navbar .navbar-brand {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff !important;
+      letter-spacing: -.5px;
+    }
+    .vb-navbar .navbar-brand span { color: var(--clr-accent); }
+    .vb-navbar .nav-link {
+      color: rgba(255,255,255,.7) !important;
+      font-weight: 500;
+      font-size: .93rem;
+      padding: .4rem .8rem !important;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .vb-navbar .nav-link:hover, .vb-navbar .nav-link.active {
+      color: #fff !important;
+      background: rgba(255,255,255,.08);
+    }
+    .btn-nav-login {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,.3);
+      color: #fff !important;
+      border-radius: var(--radius-pill) !important;
+      padding: .4rem 1.1rem !important;
+      font-size: .9rem !important;
+      font-weight: 600 !important;
+    }
+    .btn-nav-login:hover { background: rgba(255,255,255,.12) !important; border-color: rgba(255,255,255,.6) !important; }
+    .btn-nav-cta {
+      background: var(--clr-primary) !important;
+      border: none !important;
+      color: #fff !important;
+      border-radius: var(--radius-pill) !important;
+      padding: .4rem 1.2rem !important;
+      font-size: .9rem !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 16px rgba(124,58,237,.4) !important;
+    }
+    .btn-nav-cta:hover {
+      background: var(--clr-primary-dark) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(124,58,237,.5) !important;
+    }
+    .navbar-toggler { border: 1px solid rgba(255,255,255,.25) !important; }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* =============================================
+        HERO INTERNA & ANIMAÇÕES (CORRIGIDO AQUI)
+    ============================================= */
+    .vb-hero-interna {
+      background: linear-gradient(145deg, #0F0A1E 0%, #1E1040 60%, #3B2F6B 100%);
+      padding: 4.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .vb-hero-interna::before {
+      content: '';
+      position: absolute;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(124,58,237,.35) 0%, transparent 70%);
+      top: -60px; right: -40px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Força os elementos a iniciarem invisíveis e aplica a animação direto do CSS */
+    .hero-title-interna {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      opacity: 0;
+      animation: fadeUp .6s .1s ease both;
+    }
+    .hero-title-interna .highlight {
+      background: linear-gradient(90deg, var(--clr-accent), #FB923C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub-interna {
+      color: rgba(255,255,255,.7);
+      font-size: 1.05rem;
+      max-width: 600px;
+      opacity: 0;
+      animation: fadeUp .6s .25s ease both;
+    }
+
+    /* =============================================
+        CONTEÚDO SOBRE / GRID DE VALORES
+    ============================================= */
+    .vb-section { padding: 4.5rem 0; }
+    
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      color: var(--clr-primary);
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: .5rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 18px; height: 2px;
+      background: var(--clr-primary);
+      border-radius: 2px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -.5px;
+      color: var(--clr-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-image-wrapper {
+      position: relative;
+      padding-bottom: 2rem;
+    }
+    .about-img-1 {
+      width: 85%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-hover);
+    }
+    .about-img-2 {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 50%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+      border: 6px solid var(--clr-bg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .vb-about-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-card);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow-card);
+      transition: var(--transition);
+      height: 100%;
+    }
+    .vb-about-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(124,58,237,.2);
+    }
+    .about-icon {
+      width: 48px; height: 48px;
+      background: rgba(124,58,237,.08);
+      color: var(--clr-primary);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    /* =============================================
+        FOOTER
+    ============================================= */
+    .vb-footer {
+      background: var(--clr-dark);
+      color: rgba(255,255,255,.55);
+      padding: 3.5rem 0 1.5rem;
+    }
+    .footer-brand {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .footer-brand span { color: var(--clr-accent); }
+    .footer-desc { font-size: .88rem; line-height: 1.6; max-width: 260px; margin-top: .5rem; }
+    .footer-heading {
+      font-family: var(--ff-display);
+      font-size: .85rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: .5rem; }
+    .footer-links a { color: rgba(255,255,255,.55); font-size: .88rem; }
+    .footer-links a:hover { color: #fff; }
+    .footer-social { display: flex; gap: .7rem; margin-top: 1rem; }
+    .social-icon {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.65);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .social-icon:hover { background: var(--clr-primary); border-color: var(--clr-primary); color: #fff; }
+    .footer-divider { border-color: rgba(255,255,255,.08); margin: 2rem 0 1rem; }
+    .footer-copy { font-size: .82rem; color: rgba(255,255,255,.35); }
+    .footer-copy a { color: var(--clr-accent); }
+
+    @media (max-width: 991px) {
+      .about-image-wrapper { margin-bottom: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="vb-navbar navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Vibe<span>Event</span></a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html">Explorar</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#categorias">Categorias</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Para ONGs</a></li>
+          <li class="nav-item"><a class="nav-link active" href="sobre.html">Sobre</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+          <a href="login.html" class="nav-link btn-nav-login">Entrar</a>
+          <a href="login.html#cadastro" class="nav-link btn-nav-cta">
+            <i class="bi bi-plus-lg me-1"></i>Divulgar Evento
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="vb-hero-interna">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <h1 class="hero-title-interna mb-3">
+            Conectando pessoas a <span class="highlight">propósitos reais</span>
+          </h1>
+          <p class="hero-sub-interna mb-0">
+            Saiba como o VibeEvent nasceu para transformar a forma como você interage, 
+            apoia e descobre a movimentação cultural e social na sua cidade.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vb-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="about-image-wrapper">
+            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=700&q=80" alt="Show cultural" class="about-img-1" />
+            <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=400&q=80" alt="Pessoas em workshop" class="about-img-2" />
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <span class="section-eyebrow">Nossa Missão</span>
+          <h2 class="section-title">O que nos move diariamente?</h2>
+          <p class="mb-3" style="line-height: 1.7;">
+            O <strong>VibeEvent</strong> nasceu com a ideia de conectar pessoas a eventos e projetos que fazem a diferença. Além de reunir ingressos em um só lugar, queremos ajudar a divulgar iniciativas independentes, eventos culturais, workshops e ações sociais em Goiás e região.
+          </p>
+          <p class="mb-4" style="line-height: 1.7; color: var(--clr-body);">
+            Acreditamos que a cultura deve ser acessível. É por isso que abrimos espaço de destaque para que coletivos e ONGs publiquem seus eventos de forma simplificada, aproximando quem quer fazer a diferença de quem quer viver experiências genuínas.
+          </p>
+          <div class="d-flex gap-3">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-check-circle-fill text-success"></i>
+              <span class="fw-semibold text-dark" style="font-size: .9rem;">+1200 Eventos</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-check-circle-fill text-success"></i>
+              <span class="fw-semibold text-dark" style="font-size: .9rem;">Foco Social & Cultural</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vb-section" style="background: rgba(124,58,237, .03); border-top: 1px solid var(--clr-border); border-bottom: 1px solid var(--clr-border);">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="section-eyebrow justify-content-center">Valores fundamentais</span>
+        <h2 class="section-title mb-0">Como construímos o VibeEvent</h2>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="vb-about-card">
+            <div class="about-icon">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+            <h3 class="h5 fw-bold text-dark mb-2">Impacto Comunitário</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Apoiamos diretamente criadores locais e instituições sem fins lucrativos para fortalecer a economia criativa.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="vb-about-card">
+            <div class="about-icon">
+              <i class="bi bi-unlock-fill"></i>
+            </div>
+            <h3 class="h5 fw-bold text-dark mb-2">Acessibilidade</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Priorizamos a divulgação de programações acessíveis e gratuitas para conectar toda a população à arte.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="vb-about-card">
+            <div class="about-icon">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <h3 class="h5 fw-bold text-dark mb-2">Tecnologia Simples</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Criamos uma ponte ágil e limpa para que qualquer organizador publique e divulgue seu evento em minutos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="vb-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <a class="footer-brand" href="index.html">Vibe<span>Event</span></a>
+          <p class="footer-desc">
+            A sua conexão direta com a cultura, arte e eventos transformadores da sua cidade.
+          </p>
+          <div class="footer-social">
+            <span class="social-icon"><i class="bi bi-instagram"></i></span>
+            <span class="social-icon"><i class="bi bi-facebook"></i></span>
+            <span class="social-icon"><i class="bi bi-linkedin"></i></span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2 col-md-3 ms-lg-auto">
+          <h4 class="footer-heading">Plataforma</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Explorar Eventos</a></li>
+            <li><a href="index.html#categorias">Categorias</a></li>
+            <li><a href="#">Preços / Divulgação</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-2 col-md-3">
+          <h4 class="footer-heading">Institucional</h4>
+          <ul class="footer-links">
+            <li><a href="sobre.html">Sobre Nós</a></li>
+            <li><a href="#">Para ONGs</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h4 class="footer-heading">Novidades no seu e-mail</h4>
+          <p class="small text-white-50 mb-3">Receba a agenda cultural semanal.</p>
+          <div class="d-flex gap-2">
+            <input type="email" class="form-control form-control-sm border-0" placeholder="Seu e-mail" style="border-radius:var(--radius-pill); padding-left:1rem; font-size:.85rem;" />
+            <button class="btn btn-sm btn-warning" style="border-radius:var(--radius-pill); font-weight:700; font-size:.85rem; color:var(--clr-dark);">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="footer-divider" />
+
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+        <p class="footer-copy mb-0">
+          &copy; 2026 VibeEvent. Todos os direitos reservados.
+        </p>
+        <p class="footer-copy mb-0">
+          Desenvolvido com carinho para o ecossistema cultural de <a href="#">Goiás</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
