@@ -297,8 +297,78 @@
       overflow-x: auto;
       scrollbar-width: none;
       padding-bottom: 2px;
+      flex: 1;
+      scroll-behavior: smooth;
     }
     .filter-scroll::-webkit-scrollbar { display: none; }
+
+ .filter-nav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.filter-scroll{
+    flex:1;
+    overflow-x:auto;
+}
+
+.filter-scroll-btn{
+    width:44px;
+    height:44px;
+    border:none;
+    border-radius:12px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+   .filter-scroll-btn {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid rgba(124,58,237,.25);
+  border-radius: 10px; /* quadradinho com cantos levemente arredondados */
+
+  background: #fff;
+  color: var(--clr-primary);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  flex-shrink: 0;
+
+  /* brilho roxo */
+  box-shadow:
+    0 0 12px rgba(124,58,237,.15),
+    0 0 24px rgba(124,58,237,.08);
+
+  transition: background .2s ease, color .2s ease;
+}
+
+.filter-scroll-btn:hover {
+  background: var(--clr-primary);
+  color: #fff;
+
+  /* brilho mais forte */
+  box-shadow:
+    0 0 16px rgba(124,58,237,.35),
+    0 0 32px rgba(124,58,237,.2);
+}
+
+.filter-scroll-btn:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.filter-scroll-btn i {
+  font-size: 1rem;
+}
 
     .filter-btn {
       display: inline-flex;
@@ -963,62 +1033,73 @@
   </section>
 
 
-  <!-- ============================================================
-       QUICK FILTERS
-  ============================================================ -->
-  <div class="vb-filters">
-    <div class="container">
-      <div class="filter-scroll">
+<div class="vb-filters">
+  <div class="container">
+    <div class="filter-nav">
+
+      <button class="filter-scroll-btn filter-scroll-prev" type="button" aria-label="Anterior filtro">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="filter-scroll" tabindex="0">
         <span class="filter-label">Filtrar:</span>
 
         <button class="filter-btn active" data-filter="all">
           <i class="bi bi-grid-3x3-gap"></i> Todos
         </button>
 
-        <!-- Categorias -->
         <button class="filter-btn" data-filter="musica">
           <i class="bi bi-music-note-beamed"></i> Música
         </button>
+
         <button class="filter-btn" data-filter="teatro">
           <i class="bi bi-camera-reels"></i> Teatro
         </button>
+
         <button class="filter-btn" data-filter="arte">
           <i class="bi bi-palette"></i> Arte
         </button>
+
         <button class="filter-btn" data-filter="educacao">
           <i class="bi bi-mortarboard"></i> Educação
         </button>
+
         <button class="filter-btn" data-filter="esporte">
           <i class="bi bi-trophy"></i> Esporte
         </button>
+
         <button class="filter-btn" data-filter="gastronomia">
           <i class="bi bi-egg-fried"></i> Gastronomia
         </button>
 
-        <!-- Separador visual -->
-        <span style="width:1px; height:20px; background:var(--clr-border); flex-shrink:0; margin:0 .3rem;"></span>
+        <span style="width:1px;height:20px;background:var(--clr-border);flex-shrink:0;margin:0 .3rem;"></span>
 
-        <!-- Data -->
         <button class="filter-btn" data-filter="hoje">
           <i class="bi bi-calendar-event"></i> Hoje
         </button>
+
         <button class="filter-btn" data-filter="semana">
           <i class="bi bi-calendar-week"></i> Esta semana
         </button>
+
         <button class="filter-btn" data-filter="mes">
           <i class="bi bi-calendar-month"></i> Este mês
         </button>
 
-        <!-- Preço -->
-        <span style="width:1px; height:20px; background:var(--clr-border); flex-shrink:0; margin:0 .3rem;"></span>
+        <span style="width:1px;height:20px;background:var(--clr-border);flex-shrink:0;margin:0 .3rem;"></span>
+
         <button class="filter-btn filter-btn-free" data-filter="gratuito">
           <i class="bi bi-ticket-perforated"></i> Gratuito
         </button>
       </div>
+
+      <button class="filter-scroll-btn filter-scroll-next" type="button" aria-label="Próximo filtro">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
     </div>
   </div>
-
-
+</div>
   <!-- ============================================================
        DESTAQUE — BANNER FEATURED
   ============================================================ -->
@@ -1471,6 +1552,29 @@
         console.log('Filtro ativo:', filter);
       });
     });
+
+    const filterScroll = document.querySelector('.filter-scroll');
+    const prevFilterBtn = document.querySelector('.filter-scroll-prev');
+    const nextFilterBtn = document.querySelector('.filter-scroll-next');
+    const filterScrollStep = 260;
+
+    function updateFilterScrollButtons() {
+      if (!filterScroll) return;
+      prevFilterBtn.disabled = filterScroll.scrollLeft <= 0;
+      nextFilterBtn.disabled = filterScroll.scrollLeft + filterScroll.clientWidth >= filterScroll.scrollWidth - 1;
+    }
+
+    if (filterScroll) {
+      prevFilterBtn.addEventListener('click', () => {
+        filterScroll.scrollBy({ left: -filterScrollStep, behavior: 'smooth' });
+      });
+      nextFilterBtn.addEventListener('click', () => {
+        filterScroll.scrollBy({ left: filterScrollStep, behavior: 'smooth' });
+      });
+      filterScroll.addEventListener('scroll', updateFilterScrollButtons);
+      window.addEventListener('resize', updateFilterScrollButtons);
+      updateFilterScrollButtons();
+    }
 
     /* ----------------------------------
        WISHLIST TOGGLE
