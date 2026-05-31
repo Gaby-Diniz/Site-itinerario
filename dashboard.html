@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · VibeEvent</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --clr-primary:      #7C3AED;
+      --clr-primary-dark: #5B21B6;
+      --clr-primary-lt:   #EDE9FE;
+      --clr-accent:       #F59E0B;
+      --clr-accent-lt:    #FEF3C7;
+      --clr-dark:         #0F0A1E;
+      --clr-mid:          #3B2F6B;
+      --clr-body:         #4B4565;
+      --clr-muted:        #8B85A7;
+      --clr-surface:      #FFFFFF;
+      --clr-bg:           #F7F4FF;
+      --clr-border:       #EDE9FE;
+      --clr-free:         #10B981;
+      --sidebar-w:        240px;
+      --topbar-h:         64px;
+      --ff-display:       'Syne', sans-serif;
+      --ff-body:          'Figtree', sans-serif;
+      --radius-card:      16px;
+      --radius-pill:      999px;
+      --shadow-card:      0 4px 24px rgba(124,58,237,.09);
+      --transition:       .26s cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--ff-body);
+      background: var(--clr-bg);
+      color: var(--clr-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1,h2,h3,h4 { font-family: var(--ff-display); color: var(--clr-dark); }
+
+    /* =============================================
+       APP SHELL
+    ============================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ───────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--clr-dark);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 200;
+      transition: transform var(--transition);
+      overflow: hidden;
+    }
+
+    /* decoração lateral */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(124,58,237,.35), transparent 70%);
+      bottom: 60px; left: -60px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .sidebar-brand {
+      padding: 1.3rem 1.4rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      flex-shrink: 0;
+    }
+    .sidebar-brand a {
+      font-family: var(--ff-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -.4px;
+    }
+    .sidebar-brand a span { color: var(--clr-accent); }
+    .sidebar-badge {
+      display: inline-block;
+      background: rgba(124,58,237,.3);
+      color: #C4B5FD;
+      border-radius: 6px;
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      padding: .1rem .45rem;
+      margin-top: .2rem;
+    }
+
+    /* Nav groups */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 1rem 0;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+
+    .nav-group-label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.3);
+      padding: .6rem 1.4rem .3rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .65rem 1.4rem;
+      color: rgba(255,255,255,.55);
+      font-size: .875rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 0;
+      transition: var(--transition);
+      position: relative;
+      cursor: pointer;
+    }
+    .sidebar-link i { font-size: 1rem; flex-shrink: 0; }
+    .sidebar-link:hover {
+      color: rgba(255,255,255,.9);
+      background: rgba(255,255,255,.05);
+    }
+    .sidebar-link.active {
+      color: #fff;
+      background: rgba(124,58,237,.25);
+    }
+    .sidebar-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 3px;
+      background: var(--clr-primary);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .sidebar-badge-count {
+      margin-left: auto;
+      background: var(--clr-primary);
+      color: #fff;
+      border-radius: var(--radius-pill);
+      font-size: .65rem;
+      font-weight: 700;
+      padding: .15rem .5rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* Perfil no bottom da sidebar */
+    .sidebar-user {
+      padding: 1rem 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-shrink: 0;
+    }
+    .user-avatar-sm {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--clr-primary), #A78BFA);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-family: var(--ff-display);
+      font-size: .9rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .user-info-sm { flex: 1; min-width: 0; }
+    .user-name-sm {
+      font-size: .82rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-role-sm { font-size: .72rem; color: rgba(255,255,255,.4); }
+    .user-logout {
+      color: rgba(255,255,255,.35);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .user-logout:hover { color: #EF4444; }
+
+    /* ── MAIN AREA ─────────────────────────── */
+    .main-area {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ──────────────────────────── */
+    .topbar {
+      background: var(--clr-surface);
+      border-bottom: 1px solid var(--clr-border);
+      height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.8rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 1rem;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    /* hamburger mobile */
+    .sidebar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--clr-dark);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: .2rem;
+    }
+
+    .topbar-title {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--clr-dark);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .topbar-icon-btn {
+      width: 38px; height: 38px;
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--clr-body);
+      font-size: .95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+    .topbar-icon-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+
+    .notif-dot {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 7px; height: 7px;
+      background: #EF4444;
+      border-radius: 50%;
+      border: 1.5px solid var(--clr-surface);
+    }
+
+    .btn-new-event {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: var(--clr-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: .5rem 1.2rem;
+      font-family: var(--ff-body);
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(124,58,237,.35);
+      white-space: nowrap;
+    }
+    .btn-new-event:hover {
+      background: var(--clr-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(124,58,237,.45);
+    }
+
+    /* ── CONTEÚDO PRINCIPAL ─────────────── */
+    .main-content {
+      flex: 1;
+      padding: 1.8rem;
+    }
+
+    /* Saudação */
+    .dash-greeting {
+      margin-bottom: 1.8rem;
+    }
+    .dash-greeting h1 {
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 800;
+      letter-spacing: -.4px;
+      margin-bottom: .2rem;
+    }
+    .dash-greeting p { color: var(--clr-muted); font-size: .9rem; }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-card);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: var(--transition);
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(124,58,237,.13); }
+
+    .stat-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .stat-info { flex: 1; }
+    .stat-label {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--clr-muted);
+      margin-bottom: .3rem;
+    }
+    .stat-value {
+      font-family: var(--ff-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--clr-dark);
+      line-height: 1;
+      margin-bottom: .3rem;
+    }
+    .stat-delta {
+      font-size: .75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: .2rem;
+    }
+    .stat-delta.up { color: var(--clr-free); }
+    .stat-delta.neutral { color: var(--clr-muted); }
+
+    /* ── SEÇÃO HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .section-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--clr-dark);
+      margin: 0;
+    }
+
+    .btn-link-sm {
+      color: var(--clr-primary);
+      font-size: .82rem;
+      font-weight: 700;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      transition: var(--transition);
+    }
+    .btn-link-sm:hover { color: var(--clr-primary-dark); }
+
+    /* ── TABLE CARD ── */
+    .table-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* Filtros da tabela */
+    .table-filters {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      border: 1.5px solid var(--clr-border);
+      background: #fff;
+      color: var(--clr-body);
+      border-radius: var(--radius-pill);
+      padding: .3rem .85rem;
+      font-family: var(--ff-body);
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--clr-primary);
+      border-color: var(--clr-primary);
+      color: #fff;
+    }
+
+    .table-search {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-pill);
+      padding: .3rem .9rem;
+      transition: var(--transition);
+    }
+    .table-search:focus-within { border-color: var(--clr-primary); }
+    .table-search i { color: var(--clr-muted); font-size: .9rem; }
+    .table-search input {
+      border: none; background: transparent; outline: none;
+      font-family: var(--ff-body); font-size: .85rem; color: var(--clr-dark); width: 160px;
+    }
+    .table-search input::placeholder { color: var(--clr-muted); }
+
+    /* A própria tabela */
+    .events-table { width: 100%; border-collapse: collapse; }
+    .events-table thead th {
+      padding: .75rem 1.2rem;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--clr-muted);
+      background: var(--clr-bg);
+      border-bottom: 1px solid var(--clr-border);
+      white-space: nowrap;
+    }
+    .events-table tbody tr {
+      border-bottom: 1px solid var(--clr-border);
+      transition: background var(--transition);
+    }
+    .events-table tbody tr:last-child { border-bottom: none; }
+    .events-table tbody tr:hover { background: rgba(124,58,237,.025); }
+    .events-table td {
+      padding: 1rem 1.2rem;
+      vertical-align: middle;
+      font-size: .88rem;
+    }
+
+    /* Evento info cell */
+    .event-cell {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+    .event-thumb {
+      width: 52px; height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .event-cell-title {
+      font-weight: 700;
+      color: var(--clr-dark);
+      font-size: .88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+      display: block;
+    }
+    .event-cell-cat {
+      font-size: .73rem;
+      color: var(--clr-muted);
+      font-weight: 500;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      border-radius: var(--radius-pill);
+      padding: .25rem .75rem;
+      font-size: .73rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+    .status-ativo    { background: #D1FAE5; color: #065F46; }
+    .status-ativo::before { background: var(--clr-free); }
+    .status-rascunho { background: var(--clr-accent-lt); color: #92400E; }
+    .status-rascunho::before { background: var(--clr-accent); }
+    .status-encerrado{ background: #F1F5F9; color: #64748B; }
+    .status-encerrado::before { background: #94A3B8; }
+
+    /* Action buttons */
+    .action-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--clr-border);
+      background: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--clr-body);
+      font-size: .85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .action-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); background: var(--clr-primary-lt); }
+    .action-btn.danger:hover { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
+
+    /* ── QUICK ACTIONS CARD ── */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .75rem;
+    }
+    .qa-card {
+      background: var(--clr-surface);
+      border: 1.5px solid var(--clr-border);
+      border-radius: 14px;
+      padding: 1.1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+    .qa-card:hover {
+      border-color: var(--clr-primary);
+      background: var(--clr-primary-lt);
+      transform: translateY(-2px);
+    }
+    .qa-icon {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .qa-label { font-size: .83rem; font-weight: 700; color: var(--clr-dark); }
+    .qa-sub   { font-size: .73rem; color: var(--clr-muted); margin-top: .1rem; }
+
+    /* ── ACTIVITY FEED ── */
+    .activity-list { padding: .5rem 0; }
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .85rem;
+      padding: .8rem 1.2rem;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .activity-text { flex: 1; }
+    .activity-text strong { color: var(--clr-dark); font-size: .86rem; }
+    .activity-text p { font-size: .8rem; color: var(--clr-muted); margin: .1rem 0 0; }
+    .activity-time { font-size: .73rem; color: var(--clr-muted); white-space: nowrap; }
+
+    /* ── MODAL — CRIAR EVENTO ── */
+    .modal-content {
+      border: 1px solid var(--clr-border) !important;
+      border-radius: 20px !important;
+      overflow: hidden;
+    }
+    .modal-header {
+      background: linear-gradient(135deg, var(--clr-dark), var(--clr-mid));
+      border-bottom: none !important;
+      padding: 1.4rem 1.6rem !important;
+    }
+    .modal-title {
+      font-family: var(--ff-display) !important;
+      font-weight: 800 !important;
+      color: #fff !important;
+      font-size: 1.2rem !important;
+    }
+    .btn-close { filter: invert(1) !important; opacity: .7 !important; }
+
+    .modal-body { padding: 1.6rem !important; }
+
+    /* Form modal */
+    .form-label-vb {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--clr-dark);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .35rem;
+      display: block;
+    }
+    .input-vb {
+      width: 100%;
+      border: 1.5px solid var(--clr-border);
+      border-radius: 12px;
+      padding: .7rem 1rem;
+      font-family: var(--ff-body);
+      font-size: .92rem;
+      color: var(--clr-dark);
+      background: var(--clr-bg);
+      outline: none;
+      transition: var(--transition);
+    }
+    .input-vb:focus {
+      border-color: var(--clr-primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(124,58,237,.1);
+    }
+    select.input-vb { cursor: pointer; }
+    textarea.input-vb { resize: vertical; min-height: 90px; }
+
+    /* Upload de imagem */
+    .upload-area {
+      border: 2px dashed var(--clr-border);
+      border-radius: 14px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--clr-bg);
+    }
+    .upload-area:hover { border-color: var(--clr-primary); background: var(--clr-primary-lt); }
+    .upload-area i { font-size: 2rem; color: var(--clr-muted); margin-bottom: .5rem; display: block; }
+    .upload-area p { font-size: .82rem; color: var(--clr-muted); margin: 0; }
+    .upload-area strong { color: var(--clr-primary); }
+
+    /* Toggle gratuito/pago */
+    .price-toggle {
+      display: flex;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+      gap: 3px;
+      margin-bottom: .75rem;
+    }
+    .price-opt {
+      flex: 1;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-pill);
+      padding: .45rem;
+      font-family: var(--ff-body);
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--clr-muted);
+    }
+    .price-opt.active { background: var(--clr-primary); color: #fff; box-shadow: 0 3px 10px rgba(124,58,237,.3); }
+
+    /* Botões do modal footer */
+    .modal-footer { border-top: 1px solid var(--clr-border) !important; padding: 1.1rem 1.6rem !important; gap: .6rem !important; }
+    .btn-modal-cancel {
+      background: transparent;
+      border: 1.5px solid var(--clr-border);
+      color: var(--clr-body);
+      border-radius: var(--radius-pill);
+      padding: .55rem 1.3rem;
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-modal-cancel:hover { border-color: var(--clr-muted); }
+
+    .btn-modal-draft {
+      background: var(--clr-accent-lt);
+      border: 1.5px solid var(--clr-accent);
+      color: #92400E;
+      border-radius: var(--radius-pill);
+      padding: .55rem 1.3rem;
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-modal-draft:hover { background: var(--clr-accent); color: #fff; }
+
+    .btn-modal-publish {
+      background: var(--clr-primary);
+      border: none;
+      color: #fff;
+      border-radius: var(--radius-pill);
+      padding: .55rem 1.5rem;
+      font-family: var(--ff-body);
+      font-weight: 800;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(124,58,237,.35);
+    }
+    .btn-modal-publish:hover { background: var(--clr-primary-dark); }
+
+    /* ── MOBILE RESPONSIVO ── */
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-area { margin-left: 0; }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: 190;
+      }
+      .sidebar-overlay.show { display: block; }
+    }
+    @media (max-width: 640px) {
+      .main-content { padding: 1.2rem 1rem; }
+      .table-search { display: none; }
+      .event-cell-title { max-width: 130px; }
+      .topbar { padding: 0 1rem; }
+      .quick-actions-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp .4s ease both; }
+    .delay-1 { animation-delay: .07s; }
+    .delay-2 { animation-delay: .14s; }
+    .delay-3 { animation-delay: .21s; }
+    .delay-4 { animation-delay: .28s; }
+
+    /* Toast */
+    #toast {
+      position:fixed; bottom:1.5rem; left:50%;
+      transform:translateX(-50%) translateY(60px);
+      background:var(--clr-dark); color:#fff;
+      border-radius:var(--radius-pill);
+      padding:.7rem 1.4rem; font-size:.88rem; font-weight:600;
+      opacity:0; transition:.35s cubic-bezier(.4,0,.2,1); z-index:9999;
+      display:flex; align-items:center; gap:.5rem; white-space:nowrap;
+      box-shadow:0 8px 28px rgba(0,0,0,.3);
+    }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  
+/* =========================
+   RESPONSIVO DASHBOARD
+========================= */
+
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%) !important;
+  }
+  .sidebar.active {
+    transform: translateX(0) !important;
+  }
+  .main-area {
+    margin-left: 0 !important;
+  }
+  .sidebar-toggle {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .topbar {
+    padding: 0 1rem !important;
+  }
+  .topbar-title {
+    font-size: .95rem !important;
+  }
+  .btn-new-event {
+    padding: .4rem .9rem !important;
+    font-size: .8rem !important;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Overlay mobile sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="app-shell">
+
+  <!-- ══════════════════════════════
+       SIDEBAR
+  ══════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+      <a href="index.html">Vibe<span>Event</span></a>
+      <div><span class="sidebar-badge">Painel do Organizador</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-group-label">Principal</p>
+      <a class="sidebar-link active" onclick="setPage('overview')">
+        <i class="bi bi-grid-1x2"></i> Visão Geral
+      </a>
+      <a class="sidebar-link" onclick="setPage('events')">
+        <i class="bi bi-calendar-event"></i> Meus Eventos
+        <span class="sidebar-badge-count">6</span>
+      </a>
+      <a class="sidebar-link" onclick="setPage('inscricoes')">
+        <i class="bi bi-people"></i> Inscrições
+        <span class="sidebar-badge-count">243</span>
+      </a>
+      <a class="sidebar-link" onclick="setPage('metrics')">
+        <i class="bi bi-bar-chart-line"></i> Métricas
+      </a>
+
+      <p class="nav-group-label">Configurações</p>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-building"></i> Perfil da Org.
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-bell"></i> Notificações
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-gear"></i> Configurações
+      </a>
+
+      <p class="nav-group-label">Suporte</p>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-question-circle"></i> Ajuda
+      </a>
+      <a class="sidebar-link" href="index.html">
+        <i class="bi bi-box-arrow-up-right"></i> Ver site público
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar-sm">OR</div>
+      <div class="user-info-sm">
+        <div class="user-name-sm">ONG Raízes</div>
+        <div class="user-role-sm">Organizador verificado</div>
+      </div>
+      <i class="bi bi-box-arrow-right user-logout" onclick="location.href='login.html'" title="Sair"></i>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════
+       ÁREA PRINCIPAL
+  ══════════════════════════════ -->
+  <div class="main-area">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="bi bi-list"></i>
+        </button>
+        <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn" title="Notificações">
+          <i class="bi bi-bell"></i>
+          <span class="notif-dot"></span>
+        </div>
+        <div class="topbar-icon-btn d-none d-sm-flex" title="Ajuda">
+          <i class="bi bi-question-circle"></i>
+        </div>
+        <button class="btn-new-event" data-bs-toggle="modal" data-bs-target="#modalCriarEvento">
+          <i class="bi bi-plus-lg"></i> Criar Evento
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTEÚDO -->
+    <main class="main-content">
+
+      <!-- ══════════════════════════════
+           PÁGINA: VISÃO GERAL
+      ══════════════════════════════ -->
+      <div id="page-overview">
+
+        <!-- Saudação -->
+        <div class="dash-greeting fade-up">
+          <h1>Olá, ONG Raízes 👋</h1>
+          <p>Aqui está um resumo da sua atividade. Última atualização: agora há pouco.</p>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3 fade-up delay-1">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#EDE9FE;">
+                <i class="bi bi-calendar-event" style="color:var(--clr-primary)"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Total de Eventos</div>
+                <div class="stat-value">6</div>
+                <span class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +2 este mês</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3 fade-up delay-2">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#D1FAE5;">
+                <i class="bi bi-people-fill" style="color:var(--clr-free)"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Total de Inscritos</div>
+                <div class="stat-value">843</div>
+                <span class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +127 este mês</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3 fade-up delay-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#FEF3C7;">
+                <i class="bi bi-eye-fill" style="color:var(--clr-accent)"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Visualizações</div>
+                <div class="stat-value">4.2k</div>
+                <span class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +18% vs mês ant.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3 fade-up delay-4">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#FCE7F3;">
+                <i class="bi bi-star-fill" style="color:#EC4899"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Avaliação Média</div>
+                <div class="stat-value">4.8</div>
+                <span class="stat-delta neutral"><i class="bi bi-dash"></i> Estável</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid: Ações Rápidas + Atividade Recente -->
+        <div class="row g-3">
+
+          <!-- Ações Rápidas -->
+          <div class="col-lg-4">
+            <div class="table-card fade-up">
+              <div style="padding:1rem 1.2rem; border-bottom:1px solid var(--clr-border);">
+                <h2 style="font-size:1rem;font-weight:700;margin:0;">Ações Rápidas</h2>
+              </div>
+              <div style="padding:1rem 1.2rem;">
+                <div class="quick-actions-grid">
+                  <div class="qa-card" data-bs-toggle="modal" data-bs-target="#modalCriarEvento">
+                    <div class="qa-icon" style="background:var(--clr-primary-lt);">
+                      <i class="bi bi-plus-circle" style="color:var(--clr-primary)"></i>
+                    </div>
+                    <div>
+                      <div class="qa-label">Criar Evento</div>
+                      <div class="qa-sub">Novo evento</div>
+                    </div>
+                  </div>
+                  <div class="qa-card" onclick="setPage('events')">
+                    <div class="qa-icon" style="background:#D1FAE5;">
+                      <i class="bi bi-pencil-square" style="color:var(--clr-free)"></i>
+                    </div>
+                    <div>
+                      <div class="qa-label">Meus Eventos</div>
+                      <div class="qa-sub">Gerenciar</div>
+                    </div>
+                  </div>
+                  <div class="qa-card" onclick="setPage('inscricoes')">
+                    <div class="qa-icon" style="background:#FEF3C7;">
+                      <i class="bi bi-people" style="color:var(--clr-accent)"></i>
+                    </div>
+                    <div>
+                      <div class="qa-label">Inscrições</div>
+                      <div class="qa-sub">Ver lista</div>
+                    </div>
+                  </div>
+                  <div class="qa-card" href="#">
+                    <div class="qa-icon" style="background:#FCE7F3;">
+                      <i class="bi bi-share" style="color:#EC4899"></i>
+                    </div>
+                    <div>
+                      <div class="qa-label">Divulgar</div>
+                      <div class="qa-sub">Compartilhar</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Atividade Recente -->
+          <div class="col-lg-8">
+            <div class="table-card fade-up">
+              <div style="padding:1rem 1.2rem; border-bottom:1px solid var(--clr-border); display:flex; align-items:center; justify-content:space-between;">
+                <h2 style="font-size:1rem;font-weight:700;margin:0;">Atividade Recente</h2>
+                <button class="btn-link-sm">Ver tudo <i class="bi bi-arrow-right"></i></button>
+              </div>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-icon" style="background:#D1FAE5;"><i class="bi bi-person-check" style="color:var(--clr-free)"></i></div>
+                  <div class="activity-text">
+                    <strong>Nova inscrição confirmada</strong>
+                    <p>Lucas Mendes se inscreveu no Sarau Cultural — Vozes da Periferia</p>
+                  </div>
+                  <span class="activity-time">há 5 min</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon" style="background:var(--clr-primary-lt);"><i class="bi bi-eye" style="color:var(--clr-primary)"></i></div>
+                  <div class="activity-text">
+                    <strong>Seu evento ganhou destaque</strong>
+                    <p>Sarau Cultural foi selecionado para o banner da Home.</p>
+                  </div>
+                  <span class="activity-time">há 2h</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon" style="background:#FEF3C7;"><i class="bi bi-star-fill" style="color:var(--clr-accent)"></i></div>
+                  <div class="activity-text">
+                    <strong>Nova avaliação 5★</strong>
+                    <p>Ana Silva avaliou "Workshop CNV" com nota máxima.</p>
+                  </div>
+                  <span class="activity-time">há 4h</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon" style="background:#FCE7F3;"><i class="bi bi-heart-fill" style="color:#EC4899"></i></div>
+                  <div class="activity-text">
+                    <strong>+12 curtidas hoje</strong>
+                    <p>O Workshop de Slam Poetry atingiu 80 favoritos.</p>
+                  </div>
+                  <span class="activity-time">hoje</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon" style="background:#DBEAFE;"><i class="bi bi-calendar-check" style="color:#3B82F6"></i></div>
+                  <div class="activity-text">
+                    <strong>Evento publicado</strong>
+                    <p>Festival de Cultura Afro-Brasileira está no ar.</p>
+                  </div>
+                  <span class="activity-time">ontem</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /row -->
+      </div><!-- /page-overview -->
+
+
+      <!-- ══════════════════════════════
+           PÁGINA: MEUS EVENTOS
+      ══════════════════════════════ -->
+      <div id="page-events" style="display:none;">
+
+        <div class="dash-greeting fade-up">
+          <h1>Meus Eventos</h1>
+          <p>Gerencie, edite e acompanhe o desempenho dos seus eventos.</p>
+        </div>
+
+        <div class="table-card fade-up">
+
+          <!-- Filtros -->
+          <div class="table-filters">
+            <button class="filter-chip active" onclick="filterStatus('todos', this)">Todos (6)</button>
+            <button class="filter-chip" onclick="filterStatus('ativo', this)">Ativos (3)</button>
+            <button class="filter-chip" onclick="filterStatus('rascunho', this)">Rascunhos (2)</button>
+            <button class="filter-chip" onclick="filterStatus('encerrado', this)">Encerrados (1)</button>
+            <div class="table-search">
+              <i class="bi bi-search"></i>
+              <input type="text" placeholder="Buscar evento…" oninput="searchTable(this.value)" />
+            </div>
+          </div>
+
+          <!-- Tabela -->
+          <div style="overflow-x:auto;">
+            <table class="events-table" id="eventsTable">
+              <thead>
+                <tr>
+                  <th>Evento</th>
+                  <th>Data</th>
+                  <th>Inscritos</th>
+                  <th>Visualizações</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="eventsTableBody">
+
+                <tr data-status="ativo">
+                  <td>
+                    <div class="event-cell">
+                      <img class="event-thumb" src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=100&h=60&fit=crop" alt="" />
+                      <div>
+                        <span class="event-cell-title">Sarau Cultural — Vozes da Periferia</span>
+                        <span class="event-cell-cat">🎵 Música · 06 Jun 2025</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="white-space:nowrap; color:var(--clr-body); font-weight:600; font-size:.85rem;">Sex, 06 Jun</td>
+                  <td>
+                    <span style="font-weight:700; color:var(--clr-dark);">243</span>
+                    <span style="color:var(--clr-muted); font-size:.78rem;"> / 300</span>
+                  </td>
+                  <td style="color:var(--clr-body); font-weight:600;">1.2k</td>
+                  <td><span class="status-badge status-ativo">Ativo</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Ver página" onclick="location.href='evento.html'"><i class="bi bi-eye"></i></button>
+                      <button class="action-btn" title="Editar" onclick="openEditModal('Sarau Cultural')"><i class="bi bi-pencil"></i></button>
+                      <button class="action-btn danger" title="Excluir" onclick="confirmDelete('Sarau Cultural')"><i class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-status="ativo">
+                  <td>
+                    <div class="event-cell">
+                      <img class="event-thumb" src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=100&h=60&fit=crop" alt="" />
+                      <div>
+                        <span class="event-cell-title">Workshop: Comunicação Não-Violenta</span>
+                        <span class="event-cell-cat">📚 Educação · 08 Jun 2025</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="white-space:nowrap; color:var(--clr-body); font-weight:600; font-size:.85rem;">Dom, 08 Jun</td>
+                  <td><span style="font-weight:700; color:var(--clr-dark);">52</span><span style="color:var(--clr-muted); font-size:.78rem;"> / 80</span></td>
+                  <td style="color:var(--clr-body); font-weight:600;">387</td>
+                  <td><span class="status-badge status-ativo">Ativo</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Ver página" onclick="location.href='evento.html'"><i class="bi bi-eye"></i></button>
+                      <button class="action-btn" title="Editar" onclick="openEditModal('Workshop CNV')"><i class="bi bi-pencil"></i></button>
+                      <button class="action-btn danger" title="Excluir" onclick="confirmDelete('Workshop CNV')"><i class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-status="ativo">
+                  <td>
+                    <div class="event-cell">
+                      <img class="event-thumb" src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=100&h=60&fit=crop" alt="" />
+                      <div>
+                        <span class="event-cell-title">Festival de Cultura Afro-Brasileira</span>
+                        <span class="event-cell-cat">🥁 Cultura · 14 Jun 2025</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="white-space:nowrap; color:var(--clr-body); font-weight:600; font-size:.85rem;">Sáb, 14 Jun</td>
+                  <td><span style="font-weight:700; color:var(--clr-dark);">310</span><span style="color:var(--clr-muted); font-size:.78rem;"> / 500</span></td>
+                  <td style="color:var(--clr-body); font-weight:600;">2.1k</td>
+                  <td><span class="status-badge status-ativo">Ativo</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Ver página" onclick="location.href='evento.html'"><i class="bi bi-eye"></i></button>
+                      <button class="action-btn" title="Editar" onclick="openEditModal('Festival Afro')"><i class="bi bi-pencil"></i></button>
+                      <button class="action-btn danger" title="Excluir" onclick="confirmDelete('Festival Afro')"><i class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-status="rascunho">
+                  <td>
+                    <div class="event-cell">
+                      <div style="width:52px;height:40px;border-radius:8px;background:var(--clr-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-image" style="color:var(--clr-muted)"></i></div>
+                      <div>
+                        <span class="event-cell-title">Slam Poetry — Edição Especial Julho</span>
+                        <span class="event-cell-cat">🎤 Poesia · Data não definida</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--clr-muted); font-size:.85rem;">—</td>
+                  <td style="color:var(--clr-muted);">0</td>
+                  <td style="color:var(--clr-muted);">—</td>
+                  <td><span class="status-badge status-rascunho">Rascunho</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Editar" onclick="openEditModal('Slam Julho')"><i class="bi bi-pencil"></i></button>
+                      <button class="action-btn danger" title="Excluir" onclick="confirmDelete('Slam Julho')"><i class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-status="rascunho">
+                  <td>
+                    <div class="event-cell">
+                      <div style="width:52px;height:40px;border-radius:8px;background:var(--clr-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-image" style="color:var(--clr-muted)"></i></div>
+                      <div>
+                        <span class="event-cell-title">Oficina de Grafite para Jovens</span>
+                        <span class="event-cell-cat">🎨 Arte · Data não definida</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--clr-muted); font-size:.85rem;">—</td>
+                  <td style="color:var(--clr-muted);">0</td>
+                  <td style="color:var(--clr-muted);">—</td>
+                  <td><span class="status-badge status-rascunho">Rascunho</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Editar" onclick="openEditModal('Grafite Jovens')"><i class="bi bi-pencil"></i></button>
+                      <button class="action-btn danger" title="Excluir" onclick="confirmDelete('Grafite Jovens')"><i class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-status="encerrado">
+                  <td>
+                    <div class="event-cell">
+                      <img class="event-thumb" src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=100&h=60&fit=crop" alt="" style="opacity:.5;" />
+                      <div>
+                        <span class="event-cell-title" style="opacity:.6;">Corrida Solidária — Edição Maio</span>
+                        <span class="event-cell-cat">🏃 Esporte · 12 Mai 2025</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--clr-muted); font-size:.85rem;">Dom, 12 Mai</td>
+                  <td><span style="font-weight:700; color:var(--clr-dark);">238</span><span style="color:var(--clr-muted); font-size:.78rem;"> / 300</span></td>
+                  <td style="color:var(--clr-body); font-weight:600;">891</td>
+                  <td><span class="status-badge status-encerrado">Encerrado</span></td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="action-btn" title="Ver relatório"><i class="bi bi-bar-chart"></i></button>
+                      <button class="action-btn" title="Duplicar" onclick="showToast('Evento duplicado como rascunho!')"><i class="bi bi-copy"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Footer da tabela -->
+          <div style="padding:.85rem 1.2rem; border-top:1px solid var(--clr-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem;">
+            <span style="font-size:.8rem; color:var(--clr-muted);">Mostrando 6 de 6 eventos</span>
+            <div style="display:flex; gap:.4rem;">
+              <button class="filter-chip" style="padding:.25rem .7rem; font-size:.78rem;">← Anterior</button>
+              <button class="filter-chip active" style="padding:.25rem .7rem; font-size:.78rem;">1</button>
+              <button class="filter-chip" style="padding:.25rem .7rem; font-size:.78rem;">Próxima →</button>
+            </div>
+          </div>
+
+        </div><!-- /table-card -->
+      </div><!-- /page-events -->
+
+
+      <!-- ══════════════════════════════
+           PÁGINA: INSCRIÇÕES (placeholder)
+      ══════════════════════════════ -->
+      <div id="page-inscricoes" style="display:none;">
+        <div class="dash-greeting fade-up">
+          <h1>Inscrições</h1>
+          <p>Lista completa de participantes dos seus eventos.</p>
+        </div>
+        <div class="table-card fade-up" style="padding:3rem; text-align:center;">
+          <i class="bi bi-people" style="font-size:3rem; color:var(--clr-border); display:block; margin-bottom:1rem;"></i>
+          <h3 style="font-size:1.1rem; margin-bottom:.5rem;">Seção em desenvolvimento</h3>
+          <p style="color:var(--clr-muted); font-size:.9rem;">A listagem de inscrições será integrada com o backend PHP via <code>GET /api/inscricoes.php?evento_id=X</code>.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════
+           PÁGINA: MÉTRICAS (placeholder)
+      ══════════════════════════════ -->
+      <div id="page-metrics" style="display:none;">
+        <div class="dash-greeting fade-up">
+          <h1>Métricas</h1>
+          <p>Análise de desempenho dos seus eventos.</p>
+        </div>
+        <div class="table-card fade-up" style="padding:3rem; text-align:center;">
+          <i class="bi bi-bar-chart-line" style="font-size:3rem; color:var(--clr-border); display:block; margin-bottom:1rem;"></i>
+          <h3 style="font-size:1.1rem; margin-bottom:.5rem;">Gráficos em breve</h3>
+          <p style="color:var(--clr-muted); font-size:.9rem;">Integração com Chart.js para exibir inscrições por período, fontes de tráfego e funil de conversão.</p>
+        </div>
+      </div>
+
+    </main><!-- /main-content -->
+  </div><!-- /main-area -->
+
+</div><!-- /app-shell -->
+
+
+<!-- ══════════════════════════════════════════
+     MODAL — CRIAR / EDITAR EVENTO
+══════════════════════════════════════════ -->
+<div class="modal fade" id="modalCriarEvento" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">
+          <i class="bi bi-calendar-plus me-2"></i> Cadastrar Novo Evento
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- PHP: action="api/eventos.php" method="POST" enctype="multipart/form-data" -->
+        <form id="formCriarEvento" novalidate>
+
+          <!-- Informações básicas -->
+          <h6 style="font-family:var(--ff-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--clr-muted);margin-bottom:1rem;">
+            Informações Básicas
+          </h6>
+
+          <div class="mb-3">
+            <label class="form-label-vb" for="evTitulo">Título do Evento *</label>
+            <input type="text" id="evTitulo" class="input-vb" placeholder="Ex: Sarau Cultural — Edição Julho" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label-vb" for="evDescricao">Descrição *</label>
+            <textarea id="evDescricao" class="input-vb" placeholder="Descreva o evento, o que o público vai encontrar, artistas, atividades…" style="min-height:110px;" required></textarea>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label-vb" for="evCategoria">Categoria *</label>
+              <select id="evCategoria" class="input-vb" required>
+                <option value="">Selecionar categoria</option>
+                <option>🎵 Música</option>
+                <option>🎨 Arte & Exposição</option>
+                <option>📚 Educação</option>
+                <option>🎭 Teatro</option>
+                <option>🏃 Esporte</option>
+                <option>🍳 Gastronomia</option>
+                <option>🌿 Meio Ambiente</option>
+                <option>🤝 Voluntariado</option>
+                <option>🥁 Cultura Popular</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-vb" for="evVagas">Capacidade (vagas)</label>
+              <input type="number" id="evVagas" class="input-vb" placeholder="Ex: 300 (deixe vazio para ilimitado)" min="1" />
+            </div>
+          </div>
+
+          <hr style="border-color:var(--clr-border); margin:1.5rem 0;" />
+
+          <!-- Data & Hora -->
+          <h6 style="font-family:var(--ff-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--clr-muted);margin-bottom:1rem;">
+            Data, Hora & Local
+          </h6>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-4">
+              <label class="form-label-vb" for="evData">Data *</label>
+              <input type="date" id="evData" class="input-vb" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-vb" for="evHoraInicio">Início *</label>
+              <input type="time" id="evHoraInicio" class="input-vb" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-vb" for="evHoraFim">Término</label>
+              <input type="time" id="evHoraFim" class="input-vb" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label-vb" for="evEndereco">Endereço Completo *</label>
+            <input type="text" id="evEndereco" class="input-vb" placeholder="Ex: Av. Brasil, s/n — Praça Cívica, Goiânia - GO" required />
+          </div>
+
+          <hr style="border-color:var(--clr-border); margin:1.5rem 0;" />
+
+          <!-- Ingresso -->
+          <h6 style="font-family:var(--ff-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--clr-muted);margin-bottom:1rem;">
+            Ingresso & Preço
+          </h6>
+
+          <div class="price-toggle mb-0" id="priceToggle">
+            <button type="button" class="price-opt active" onclick="setPrice('gratuito', this)">
+              <i class="bi bi-ticket-perforated me-1"></i> Gratuito
+            </button>
+            <button type="button" class="price-opt" onclick="setPrice('pago', this)">
+              <i class="bi bi-cash me-1"></i> Pago
+            </button>
+          </div>
+
+          <div id="priceInput" style="display:none; margin-top:.75rem;">
+            <label class="form-label-vb" for="evPreco">Valor (R$)</label>
+            <input type="number" id="evPreco" class="input-vb" placeholder="Ex: 25,00" min="0" step="0.01" />
+          </div>
+
+          <hr style="border-color:var(--clr-border); margin:1.5rem 0;" />
+
+          <!-- Imagem de capa -->
+          <h6 style="font-family:var(--ff-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--clr-muted);margin-bottom:1rem;">
+            Imagem de Capa
+          </h6>
+
+          <div class="upload-area" onclick="document.getElementById('evImagem').click()">
+            <i class="bi bi-image-fill"></i>
+            <p><strong>Clique para enviar</strong> ou arraste a imagem aqui</p>
+            <p style="margin-top:.3rem; font-size:.75rem;">PNG, JPG ou WEBP · Máx. 5 MB · Recomendado: 1200×600px</p>
+            <input type="file" id="evImagem" accept="image/*" style="display:none;" onchange="previewImage(this)" />
+          </div>
+          <img id="imagePreview" style="display:none; width:100%; border-radius:12px; margin-top:.75rem; max-height:180px; object-fit:cover;" alt="Preview" />
+
+        </form>
+      </div><!-- /modal-body -->
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn-modal-draft" onclick="saveEvent('rascunho')">
+          <i class="bi bi-file-earmark me-1"></i> Salvar Rascunho
+        </button>
+        <button type="button" class="btn-modal-publish" onclick="saveEvent('publicar')">
+          <i class="bi bi-send-fill me-1"></i> Publicar Evento
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <i class="bi bi-check-circle-fill" style="color:var(--clr-accent)"></i>
+  <span id="toastMsg">—</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── NAVEGAÇÃO DE PÁGINAS ── */
+  const pages = ['overview','events','inscricoes','metrics'];
+  const pageTitles = { overview:'Visão Geral', events:'Meus Eventos', inscricoes:'Inscrições', metrics:'Métricas' };
+
+  function setPage(name) {
+    pages.forEach(p => document.getElementById('page-'+p).style.display = p === name ? 'block' : 'none');
+    document.getElementById('topbarTitle').textContent = pageTitles[name];
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    event?.currentTarget?.classList.add('active');
+    closeSidebar();
+  }
+
+  /* ── SIDEBAR MOBILE ── */
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+  }
+
+  /* ── FILTRO DE STATUS NA TABELA ── */
+  function filterStatus(status, btn) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#eventsTableBody tr').forEach(tr => {
+      tr.style.display = (status === 'todos' || tr.dataset.status === status) ? '' : 'none';
+    });
+  }
+
+  /* ── BUSCA NA TABELA ── */
+  function searchTable(q) {
+    const lower = q.toLowerCase();
+    document.querySelectorAll('#eventsTableBody tr').forEach(tr => {
+      const text = tr.querySelector('.event-cell-title')?.textContent.toLowerCase() || '';
+      tr.style.display = text.includes(lower) ? '' : 'none';
+    });
+  }
+
+  /* ── PREÇO TOGGLE ── */
+  function setPrice(type, btn) {
+    document.querySelectorAll('.price-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('priceInput').style.display = type === 'pago' ? 'block' : 'none';
+  }
+
+  /* ── PREVIEW DE IMAGEM ── */
+  function previewImage(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('imagePreview');
+      img.src = e.target.result;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  /* ── SALVAR EVENTO ── */
+  function saveEvent(action) {
+    const titulo = document.getElementById('evTitulo').value.trim();
+    const data   = document.getElementById('evData').value;
+    const end    = document.getElementById('evEndereco').value.trim();
+
+    if (!titulo || !data || !end) {
+      showToast('Preencha os campos obrigatórios (*)'); return;
+    }
+    // TODO: fetch('api/eventos.php', { method:'POST', body: new FormData(document.getElementById('formCriarEvento')) })
+    bootstrap.Modal.getInstance(document.getElementById('modalCriarEvento')).hide();
+    const msg = action === 'publicar'
+      ? `"${titulo}" publicado com sucesso! 🎉`
+      : `"${titulo}" salvo como rascunho.`;
+    showToast(msg);
+  }
+
+  /* ── EDITAR (abre o modal preenchido) ── */
+  function openEditModal(nome) {
+    document.getElementById('evTitulo').value = nome;
+    document.getElementById('modalTitle').textContent = '✏️ Editar Evento';
+    new bootstrap.Modal(document.getElementById('modalCriarEvento')).show();
+  }
+
+  /* ── EXCLUIR ── */
+  function confirmDelete(nome) {
+    if (confirm(`Tem certeza que deseja excluir "${nome}"? Esta ação não pode ser desfeita.`)) {
+      // TODO: fetch('api/eventos.php?id=X', { method:'DELETE' })
+      showToast(`"${nome}" excluído com sucesso.`);
+    }
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
+
+<script>
+const toggleBtn = document.querySelector(".sidebar-toggle");
+const sidebar = document.querySelector(".sidebar");
+
+if (toggleBtn && sidebar) {
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+  });
+}
+</script>
+
+</body>
+</html>
