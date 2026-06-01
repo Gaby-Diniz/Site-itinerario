@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sobre Nós — VibeEvent</title>
+  <title>Para ONGs — VibeEvent</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -13,7 +13,7 @@
 
   <style>
     /* =============================================
-        DESIGN TOKENS / CSS VARIABLES
+        DESIGN TOKENS / CSS VARIABLES (Idêntico ao Projeto)
     ============================================= */
     :root {
       --clr-primary:      #7C3AED;
@@ -137,7 +137,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Força os elementos a iniciarem invisíveis e aplica a animação direto do CSS */
     .hero-title-interna {
       font-family: var(--ff-display);
       font-size: clamp(2rem, 4vw, 3rem);
@@ -148,7 +147,7 @@
       animation: fadeUp .6s .1s ease both;
     }
     .hero-title-interna .highlight {
-      background: linear-gradient(90deg, var(--clr-accent), #FB923C);
+      background: linear-gradient(90deg, #F59E0B, #FB923C);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -162,7 +161,7 @@
     }
 
     /* =============================================
-        CONTEÚDO SOBRE / GRID DE VALORES
+        SEÇÕES E CARDS
     ============================================= */
     .vb-section { padding: 4.5rem 0; }
     
@@ -191,51 +190,67 @@
       margin-bottom: 1.5rem;
     }
 
-    .about-image-wrapper {
-      position: relative;
-      padding-bottom: 2rem;
-    }
-    .about-img-1 {
-      width: 85%;
-      height: 320px;
-      object-fit: cover;
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-hover);
-    }
-    .about-img-2 {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 50%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: var(--radius-card);
-      border: 6px solid var(--clr-bg);
-      box-shadow: var(--shadow-card);
-    }
-
-    .vb-about-card {
+    /* Estilo de Card herdado do index */
+    .vb-ong-card {
       background: var(--clr-surface);
       border: 1px solid var(--clr-border);
       border-radius: var(--radius-card);
-      padding: 2rem 1.5rem;
+      padding: 2.2rem 1.8rem;
       box-shadow: var(--shadow-card);
       transition: var(--transition);
       height: 100%;
     }
-    .vb-about-card:hover {
+    .vb-ong-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-hover);
       border-color: rgba(124,58,237,.2);
     }
-    .about-icon {
-      width: 48px; height: 48px;
+    .ong-icon {
+      width: 52px; height: 52px;
       background: rgba(124,58,237,.08);
       color: var(--clr-primary);
-      border-radius: 12px;
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 1.2rem;
+      font-size: 1.5rem;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Linha do tempo / Passo a passo */
+    .step-box {
+      position: relative;
+      padding-left: 3rem;
+    }
+    .step-number {
+      position: absolute;
+      left: 0; top: 0;
+      width: 36px; height: 36px;
+      background: var(--clr-primary);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: .95rem;
+      box-shadow: 0 4px 12px rgba(124,58,237,.3);
+    }
+
+    .btn-ong-cta {
+      background: var(--clr-primary);
+      color: #fff;
+      font-weight: 700;
+      padding: .8rem 2rem;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 18px rgba(124,58,237,.35);
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-ong-cta:hover {
+      background: var(--clr-primary-dark);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124,58,237,.45);
     }
 
     /* =============================================
@@ -282,10 +297,6 @@
     .footer-divider { border-color: rgba(255,255,255,.08); margin: 2rem 0 1rem; }
     .footer-copy { font-size: .82rem; color: rgba(255,255,255,.35); }
     .footer-copy a { color: var(--clr-accent); }
-
-    @media (max-width: 991px) {
-      .about-image-wrapper { margin-bottom: 3rem; }
-    }
   </style>
 </head>
 <body>
@@ -302,8 +313,8 @@
         <ul class="navbar-nav mx-auto gap-1">
           <li class="nav-item"><a class="nav-link" href="index.html">Explorar</a></li>
           <li class="nav-item"><a class="nav-link" href="index.html#categorias">Categorias</a></li>
-          <li class="nav-item"><a class="nav-link" href="ongs.html">Para ONGs</a></li>
-          <li class="nav-item"><a class="nav-link active" href="sobre.html">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link active" href="ongs.html">Para ONGs</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
         </ul>
         <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
           <a href="login.html" class="nav-link btn-nav-login">Entrar</a>
@@ -320,11 +331,11 @@
       <div class="row">
         <div class="col-lg-8">
           <h1 class="hero-title-interna mb-3">
-            Conectando pessoas a <span class="highlight">propósitos reais</span>
+            Impulsione o impacto da sua <span class="highlight">ONG ou projeto</span>
           </h1>
           <p class="hero-sub-interna mb-0">
-            Saiba como o VibeEvent nasceu para transformar a forma como você interage, 
-            apoia e descobre a movimentação cultural e social na sua cidade.
+            Dê visibilidade total às suas ações beneficentes, capte voluntários engajados 
+            e arrecade fundos sem pagar nenhuma taxa de divulgação.
           </p>
         </div>
       </div>
@@ -333,31 +344,37 @@
 
   <section class="vb-section">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <div class="about-image-wrapper">
-            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=700&q=80" alt="Show cultural" class="about-img-1" />
-            <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=400&q=80" alt="Pessoas em workshop" class="about-img-2" />
+      <div class="text-center mb-5">
+        <span class="section-eyebrow justify-content-center">Benefícios Exclusivos</span>
+        <h2 class="section-title mb-0">Por que divulgar no VibeEvent?</h2>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="vb-ong-card">
+            <div class="ong-icon">
+              <i class="bi bi-cash-stack"></i>
+            </div>
+            <h3 class="h5 fw-bold text-dark mb-2">Divulgação 100% Grátis</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Eventos com cunho social, bazares beneficentes ou arrecadações possuem gratuidade vitalícia para publicação na plataforma.</p>
           </div>
         </div>
-        <div class="col-lg-6">
-          <span class="section-eyebrow">Nossa Missão</span>
-          <h2 class="section-title">O que nos move diariamente?</h2>
-          <p class="mb-3" style="line-height: 1.7;">
-            O <strong>VibeEvent</strong> nasceu com a ideia de conectar pessoas a eventos e projetos que fazem a diferença. Além de reunir ingressos em um só lugar, queremos ajudar a divulgar iniciativas independentes, eventos culturais, workshops e ações sociais em Goiás e região.
-          </p>
-          <p class="mb-4" style="line-height: 1.7; color: var(--clr-body);">
-            Acreditamos que a cultura deve ser acessível. É por isso que abrimos espaço de destaque para que coletivos e ONGs publiquem seus eventos de forma simplificada, aproximando quem quer fazer a diferença de quem quer viver experiências genuínas.
-          </p>
-          <div class="d-flex gap-3">
-            <div class="d-flex align-items-center gap-2">
-              <i class="bi bi-check-circle-fill text-success"></i>
-              <span class="fw-semibold text-dark" style="font-size: .9rem;">+1200 Eventos</span>
+        <div class="col-md-4">
+          <div class="vb-ong-card">
+            <div class="ong-icon">
+              <i class="bi bi-megaphone-fill"></i>
             </div>
-            <div class="d-flex align-items-center gap-2">
-              <i class="bi bi-check-circle-fill text-success"></i>
-              <span class="fw-semibold text-dark" style="font-size: .9rem;">Foco Social & Cultural</span>
+            <h3 class="h5 fw-bold text-dark mb-2">Filtro de Causa Social</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Seu evento ganha um selo especial e aparece em destaque na nossa categoria de causas sociais, atraindo o público certo.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="vb-ong-card">
+            <div class="ong-icon">
+              <i class="bi bi-people-fill"></i>
             </div>
+            <h3 class="h5 fw-bold text-dark mb-2">Captação de Apoio</h3>
+            <p class="mb-0 small" style="line-height: 1.6;">Espaço dedicado na página do evento para sinalizar se a sua instituição precisa de voluntariado operacional ou doações físicas.</p>
           </div>
         </div>
       </div>
@@ -366,37 +383,35 @@
 
   <section class="vb-section" style="background: rgba(124,58,237, .03); border-top: 1px solid var(--clr-border); border-bottom: 1px solid var(--clr-border);">
     <div class="container">
-      <div class="text-center mb-5">
-        <span class="section-eyebrow justify-content-center">Valores fundamentais</span>
-        <h2 class="section-title mb-0">Como construímos o VibeEvent</h2>
-      </div>
-
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="vb-about-card">
-            <div class="about-icon">
-              <i class="bi bi-heart-fill"></i>
-            </div>
-            <h3 class="h5 fw-bold text-dark mb-2">Impacto Comunitário</h3>
-            <p class="mb-0 small" style="line-height: 1.6;">Apoiamos diretamente criadores locais e instituições sem fins lucrativos para fortalecer a economia criativa.</p>
-          </div>
+      <div class="row align-items-center g-5">
+        <div class="col-lg-5">
+          <span class="section-eyebrow">Simples e Ágil</span>
+          <h2 class="section-title">Como colocar sua ação no ar?</h2>
+          <p class="mb-4" style="line-height: 1.7;">
+            Criamos um fluxo desbocado e sem burocracias para que qualquer coletivo, projeto independente ou ONG estruturada consiga visibilidade em minutos.
+          </p>
+          <a href="login.html#cadastro" class="btn-ong-cta">
+            <i class="bi bi-rocket-takeoff-fill"></i> Começar Cadastro Gratuito
+          </a>
         </div>
-        <div class="col-md-4">
-          <div class="vb-about-card">
-            <div class="about-icon">
-              <i class="bi bi-unlock-fill"></i>
+        
+        <div class="col-lg-6 ms-auto">
+          <div class="d-flex flex-column gap-4">
+            <div class="step-box">
+              <div class="step-number">1</div>
+              <h4 class="h6 fw-bold text-dark mb-1">Crie o perfil da Instituição</h4>
+              <p class="small mb-0">Insira os dados básicos da sua ONG ou coletivo cultural para validação do selo social.</p>
             </div>
-            <h3 class="h5 fw-bold text-dark mb-2">Acessibilidade</h3>
-            <p class="mb-0 small" style="line-height: 1.6;">Priorizamos a divulgação de programações acessíveis e gratuitas para conectar toda a população à arte.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="vb-about-card">
-            <div class="about-icon">
-              <i class="bi bi-lightning-charge-fill"></i>
+            <div class="step-box">
+              <div class="step-number">2</div>
+              <h4 class="h6 fw-bold text-dark mb-1">Monte a página do Evento</h4>
+              <p class="small mb-0">Adicione fotos marcantes, descrição da causa, data, local e os links para inscrições ou doações.</p>
             </div>
-            <h3 class="h5 fw-bold text-dark mb-2">Tecnologia Simples</h3>
-            <p class="mb-0 small" style="line-height: 1.6;">Criamos uma ponte ágil e limpa para que qualquer organizador publique e divulgue seu evento em minutos.</p>
+            <div class="step-box">
+              <div class="step-number">3</div>
+              <h4 class="h6 fw-bold text-dark mb-1">Engaje a Comunidade</h4>
+              <p class="small mb-0">Seu evento entra na listagem geral com impulsionamento orgânico para toda a nossa base de usuários.</p>
+            </div>
           </div>
         </div>
       </div>
